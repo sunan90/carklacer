@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard Pegawai</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="logo.png" type="logo.png">
+  <script src="js/data.js"></script>
+</head>
+<body>
+  <h1 id="welcomeTitle">Dashboard Pegawai</h1>
+
+  <div id="profileContainer">
+    <img id="profilePic" src="default-avatar.png" alt="Foto Profil" />
+    <input type="file" id="uploadFoto" accept="image/*" onchange="uploadFoto()" />
+  </div>
+
+  <button class="dashboard-btn" onclick="window.location.href='checklist.html'">Lihat Checklist</button>
+  <button class="dashboard-btn" onclick="logout()">Logout</button>
+
+  <script>
+    const user = localStorage.getItem("user");
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("welcomeTitle").textContent = "Selamat datang, " + user;
+    }
+
+    // Load foto profil
+    const savedFoto = localStorage.getItem("foto_" + user);
+    if (savedFoto) {
+      document.getElementById("profilePic").src = savedFoto;
+    }
+
+    // Upload foto profil
+    function uploadFoto() {
+      const fileInput = document.getElementById("uploadFoto");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageData = e.target.result;
+          localStorage.setItem("foto_" + user, imageData);
+          document.getElementById("profilePic").src = imageData;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

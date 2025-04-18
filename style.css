@@ -1,0 +1,131 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #87ceeb; /* biru langit */
+  color: #000; /* tulisan hitam */
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #000;
+  margin-bottom: 30px;
+}
+
+#loginForm {
+  text-align: center;
+  margin-top: 50px;
+}
+
+input, select {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s ease;
+}
+
+/* Tombol login bersinar */
+button[type="submit"] {
+  background: #2196f3;
+  color: #fff;
+  box-shadow: 0 0 10px #2196f3, 0 0 20px #2196f3;
+}
+
+button[type="submit"]:hover {
+  background: #0b7dda;
+  box-shadow: 0 0 20px #0b7dda, 0 0 30px #0b7dda;
+}
+
+/* Tombol dashboard (lihat checklist & logout) */
+button.dashboard-btn {
+  background: #fff;
+  color: #000;
+  border: 1px solid #333;
+}
+
+button.dashboard-btn:hover {
+  background: #e0e0e0;
+}
+
+#progressContainer {
+  margin: 20px 0;
+  font-size: 18px;
+}
+
+#progressBarContainer {
+  width: 100%;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 20px;
+  margin-top: 5px;
+}
+
+#progressBar {
+  background: #4caf50;
+  height: 100%;
+  width: 0%;
+  transition: 0.3s ease;
+}
+
+#checklistContainer {
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+}
+
+#rekapContainer {
+  margin: 20px;
+}
+
+select {
+  background: #fff;
+}
+#suggestions {
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 4px;
+  margin: 5px auto;
+  width: 300px;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #e0e0e0;
+}
+#profileContainer {
+  text-align: center;
+  margin: 20px;
+}
+
+#profilePic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  object-fit: cover;
+  display: block;
+  margin: 10px auto;
+}
