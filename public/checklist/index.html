@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checklist Pegawai</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../logo.png" type="logo.png">
+  <script src="../js/data.js"></script>
+</head>
+<body>
+  <h1 id="title">Checklist Pegawai</h1>
+  
+  <div id="progressContainer">
+    Progress: <span id="progressText">0%</span>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+  </div>
+  <select id="mingguSelect">
+    <option value="1">Minggu 1</option>
+    <option value="2">Minggu 2</option>
+    <option value="3">Minggu 3</option>
+    <option value="4">Minggu 4</option>
+  </select>
+  
+
+  <div id="checklistContainer"></div>
+
+  <button onclick="saveChecklist()">Simpan Checklist</button>
+  <button onclick="window.location.href='../dashboard.html'">Kembali</button>
+
+  <script>
+    const user = localStorage.getItem("user");
+    if (!user) {
+      window.location.href = "../index.html";
+    } else {
+      document.getElementById("title").textContent = "Checklist " + user;
+    }
+
+    const userData = pegawaiChecklist.find(p => p.nama === user);
+
+    const checklistContainer = document.getElementById("checklistContainer");
+    userData.ceklist.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <label>
+          <input type="checkbox" id="cek_${index}" onchange="updateProgress()">
+          ${item}
+        </label>
+      `;
+      checklistContainer.appendChild(div);
+    });
+
+    function saveChecklist() {
+  const hasil = [];
+  userData.ceklist.forEach((item, index) => {
+    const checked = document.getElementById("cek_" + index).checked;
+    hasil.push({ tugas: item, status: checked });
+  });
+
+  const minggu = document.getElementById("mingguSelect").value;
+  localStorage.setItem("checklist_" + user + "_minggu" + minggu, JSON.stringify(hasil));
+  alert("Checklist minggu ke-" + minggu + " berhasil disimpan!");
+  window.location.href = "../dashboard.html";
+}
+
+// Load status checklist sebelumnya saat halaman dibuka
+function loadChecklist() {
+  const minggu = document.getElementById("mingguSelect").value;
+  const saved = JSON.parse(localStorage.getItem("checklist_" + user + "_minggu" + minggu)) || [];
+
+  userData.ceklist.forEach((item, index) => {
+    const checkbox = document.getElementById("cek_" + index);
+    if (saved[index]?.status) {
+      checkbox.checked = true;
+    } else {
+      checkbox.checked = false;
+    }
+  });
+
+  updateProgress();
+}
+
+// Pas ganti minggu, langsung reload checklist-nya
+document.getElementById("mingguSelect").addEventListener("change", loadChecklist);
+
+// Panggil saat pertama kali buka halaman
+loadChecklist();
+
+    // Hitung progress saat load awal
+    updateProgress();
+
+    function updateProgress() {
+      const total = userData.ceklist.length;
+      let checked = 0;
+      userData.ceklist.forEach((_, index) => {
+        if (document.getElementById("cek_" + index).checked) {
+          checked++;
+        }
+      });
+      const percent = Math.round((checked / total) * 100);
+      document.getElementById("progressText").textContent = percent + "%";
+      document.getElementById("progressBar").style.width = percent + "%";
+    }
+  </script>
+</body>
+</html>
