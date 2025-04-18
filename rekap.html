@@ -4,6 +4,7 @@
   <title>Rekap Checklist Pegawai</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="logo.png" type="logo.png">
+  <script src="data.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
   <button onclick="downloadImage()">Download Gambar</button>
 
   <script>
-    async function tampilkanSemuaRekap() {
+    function tampilkanSemuaRekap() {
       const rekapDiv = document.getElementById("rekapContainer");
       rekapDiv.innerHTML = `
         <table border="1" cellpadding="10" cellspacing="0">
@@ -37,37 +38,37 @@
 
       const tbody = document.getElementById("rekapTable");
 
-      try {
-        const response = await fetch('http://localhost:3000/api/checklist/rekap', {
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch recap data');
-        }
-        const recapData = await response.json();
+      pegawaiChecklist.forEach(p => {
+        if (p.nama !== "Null") {
+          let totalBulanan = 0;
+          let mingguan = [];
 
-        recapData.forEach(p => {
-          const minggu = p.minggu.map(percent => percent + '%');
-          const rataBulanan = p.totalPercent + '%';
+          for (let minggu = 1; minggu <= 4; minggu++) {
+            const dataKey = `checklist_${p.nama}_minggu${minggu}`;
+            const data = JSON.parse(localStorage.getItem(dataKey)) || [];
+            const total = data.length;
+            const selesai = data.filter(i => i.status).length;
+            const persen = total ? Math.round((selesai / total) * 100) : 0;
+
+            mingguan.push(`${persen}%`);
+            totalBulanan += persen;
+          }
+
+          const rataBulanan = Math.round(totalBulanan / 4);
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${p.nama}</td>
-            <td>${minggu[0]}</td>
-            <td>${minggu[1]}</td>
-            <td>${minggu[2]}</td>
-            <td>${minggu[3]}</td>
-            <td><strong>${rataBulanan}</strong></td>
+            <td>${mingguan[0]}</td>
+            <td>${mingguan[1]}</td>
+            <td>${mingguan[2]}</td>
+            <td>${mingguan[3]}</td>
+            <td><strong>${rataBulanan}%</strong></td>
             <td><button onclick="shareWA('${p.nama}')">Share WA</button></td>
           `;
           tbody.appendChild(tr);
-        });
-      } catch (error) {
-        rekapDiv.innerHTML = '<p>Error loading recap data. Please try again later.</p>';
-        console.error(error);
-      }
+        }
+      });
     }
 
     // Fungsi print
@@ -87,25 +88,30 @@
 
     // Share ke WhatsApp per user
     function shareWA(nama) {
-      let pesan = `Rekap Checklist ${nama}:\n\n`;
-      let totalBulanan = 0;
+  let pesan = `Rekap Checklist ${nama}:\n\n`;
+  let totalBulanan = 0;
 
-      for (let minggu = 1; minggu <= 4; minggu++) {
-        // Fetch recap data again for sharing
-        // This can be optimized by caching recapData globally if needed
-        // For simplicity, we fetch again here
-        // Alternatively, pass recapData to shareWA function
-      }
+  for (let minggu = 1; minggu <= 4; minggu++) {
+    const dataKey = `checklist_${nama}_minggu${minggu}`;
+    const data = JSON.parse(localStorage.getItem(dataKey)) || [];
+    const total = data.length;
+    const selesai = data.filter(i => i.status).length;
+    const persen = total ? Math.round((selesai / total) * 100) : 0;
 
-      // Since we don't have detailed weekly data here, just open WhatsApp with a generic message
-      pesan += `Silakan cek detail rekap di aplikasi.`;
+    totalBulanan += persen;
+    pesan += `Minggu ${minggu}: ${persen}% (${selesai}/${total})\n`;
+  }
 
-      // Ganti nomor admin di sini (pakai 62)
-      const nomorAdmin = "6281216717977";
+  const rataBulanan = Math.round(totalBulanan / 4);
+  pesan += `\nTotal Bulan Ini: ${rataBulanan}%`;
 
-      const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
-      window.open(url, '_blank');
-    }
+  // Ganti nomor admin di sini (pakai 62)
+  const nomorAdmin = "6281216717977";
+
+  const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
+  window.open(url, '_blank');
+}
+
 
     tampilkanSemuaRekap();
   </script>
