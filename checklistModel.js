@@ -1,4 +1,11 @@
 const db = require('../config/db');
+const db = require('./db');
+
+exports.getAll = (callback) => {
+    const query = 'SELECT * FROM checklists';
+    db.query(query, callback);
+};
+
 
 const Checklist = {
   getAll: (callback) => {
