@@ -111,6 +111,18 @@
   const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
   window.open(url, '_blank');
 }
+fetch('http://localhost:3000/api/checklists/admin/rekap', {
+    headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+})
+.then(response => response.json())
+.then(data => {
+    // Tampilkan data ke halaman
+    console.log(data);
+    // Bisa kamu lanjutkan buat tampilkan ke tabel
+})
+.catch(error => console.error('Error:', error));
 
 
     tampilkanSemuaRekap();
