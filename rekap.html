@@ -111,7 +111,7 @@
   const url = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
   window.open(url, '_blank');
 }
-fetch('http://localhost:3000/api/checklists/admin/rekap', {
+fetch('http://localhost:3001/api/checklists/admin/rekap', {
     headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
