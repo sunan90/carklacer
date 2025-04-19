@@ -86,3 +86,13 @@ exports.getRekapData = (req, res) => {
     res.json(recap);
   });
 };
+const Checklist = require('./checklistModel');
+
+exports.getAllChecklists = (req, res) => {
+    Checklist.getAll((err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Gagal mengambil data', error: err });
+        }
+        res.json(results);
+    });
+};
