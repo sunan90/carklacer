@@ -1,0 +1,29 @@
+Instructions to run create_checklist_pegawai_db.sql in MySQL on Windows:
+
+1. Ensure MySQL is installed and the MySQL bin directory is added to your system PATH environment variable.
+   - The bin directory is typically located at: C:\Program Files\MySQL\MySQL Server X.Y\bin
+   - Adding it to PATH allows you to run 'mysql' command from any command prompt.
+
+2. Open Command Prompt (cmd.exe).
+
+3. Navigate to the directory containing create_checklist_pegawai_db.sql file:
+   For example, if your file is in C:\Users\asus\Desktop\carklacer, run:
+   cd C:\Users\asus\Desktop\carklacer
+
+4. Log in to MySQL server by running:
+   mysql -u your_mysql_username -p
+
+   Replace 'your_mysql_username' with your MySQL username (e.g., root).
+
+5. Enter your MySQL password when prompted.
+
+6. Run the SQL script by executing:
+   SOURCE create_checklist_pegawai_db.sql;
+
+7. Exit MySQL shell:
+   EXIT;
+
+Alternative:
+- Use a MySQL GUI client like MySQL Workbench to open and run the create_checklist_pegawai_db.sql file.
+
+This will set up the checklist_pegawai database and insert all checklist data.

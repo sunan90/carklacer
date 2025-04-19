@@ -1,0 +1,30 @@
+Instructions to run checklist_data.sql in MySQL on Windows:
+
+1. Open Command Prompt (cmd.exe) or MySQL Command Line Client.
+
+2. Navigate to the directory containing checklist_data.sql file:
+   For example, if your file is in C:\Users\asus\Desktop\carklacer, run:
+   cd C:\Users\asus\Desktop\carklacer
+
+3. Run the following command to import the SQL file into your MySQL database:
+   mysql -u your_mysql_username -p your_database_name < checklist_data.sql
+
+   Replace:
+   - your_mysql_username with your MySQL username (e.g., root)
+   - your_database_name with the name of the database where you want to import the data
+
+4. You will be prompted to enter your MySQL password. Enter it and press Enter.
+
+5. The SQL commands in checklist_data.sql will be executed, inserting the data into your database.
+
+Note:
+- Make sure the target database (your_database_name) exists before running the command.
+- If you do not have the database created, you can create it using:
+  mysql -u your_mysql_username -p
+  Then inside MySQL shell:
+  CREATE DATABASE your_database_name;
+  EXIT;
+
+- Alternatively, you can open the checklist_data.sql file in a MySQL GUI client (like MySQL Workbench) and run the script there.
+
+This will set up the checklist data in your MySQL database.

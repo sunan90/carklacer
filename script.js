@@ -1,6 +1,6 @@
 // Login function
 function login(username, password) {
-  return fetch('http://localhost:3000/api/auth/login', {
+  return fetch('/api/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ function loadChecklist() {
     return;
   }
 
-  fetch('http://localhost:3000/api/checklist', {
+  fetch('/api/checklist', {
     headers: {
       'Authorization': 'Bearer ' + token
     }
@@ -67,7 +67,7 @@ function updateChecklist(id, isChecked) {
     return;
   }
 
-  fetch(`http://localhost:3000/api/checklist/${id}`, {
+  fetch(`/api/checklist/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

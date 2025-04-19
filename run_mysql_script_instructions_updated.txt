@@ -1,0 +1,37 @@
+Instructions to run checklist_data.sql in MySQL on Windows:
+
+1. Ensure MySQL is installed and the MySQL bin directory is added to your system PATH environment variable.
+   - The bin directory is typically located at: C:\Program Files\MySQL\MySQL Server X.Y\bin
+   - Adding it to PATH allows you to run 'mysql' command from any command prompt.
+
+2. Open Command Prompt (cmd.exe).
+
+3. Navigate to the directory containing checklist_data.sql file:
+   For example, if your file is in C:\Users\asus\Desktop\carklacer, run:
+   cd C:\Users\asus\Desktop\carklacer
+
+4. Log in to MySQL server by running:
+   mysql -u your_mysql_username -p
+
+   Replace 'your_mysql_username' with your MySQL username (e.g., root).
+
+5. Enter your MySQL password when prompted.
+
+6. Create the database if it does not exist:
+   CREATE DATABASE your_database_name;
+
+   Replace 'your_database_name' with your desired database name.
+
+7. Select the database:
+   USE your_database_name;
+
+8. Import the SQL file by running:
+   SOURCE checklist_data.sql;
+
+9. Exit MySQL shell:
+   EXIT;
+
+Alternative:
+- Use a MySQL GUI client like MySQL Workbench to open and run the checklist_data.sql file.
+
+This will set up the checklist data in your MySQL database.

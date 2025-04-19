@@ -1,4 +1,6 @@
-const Checklist = require('../models/checklistModel');
+
+const Checklist = require('./checklistModel');
+const db = require('./db');
 
 exports.getAllChecklist = (req, res) => {
   const username = req.user && req.user.username;
@@ -7,6 +9,14 @@ exports.getAllChecklist = (req, res) => {
   }
   const sql = 'SELECT * FROM checklist WHERE nama = ?';
   Checklist.getByUsername(username, (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(result);
+  });
+};
+
+exports.getAllChecklistsAdmin = (req, res) => {
+  // Admin endpoint to get all checklist data
+  Checklist.getAll((err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json(result);
   });
@@ -53,7 +63,7 @@ exports.getRekapData = (req, res) => {
     GROUP BY nama
   `;
 
-  Checklist.query(sql, (err, results) => {
+  db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: err });
 
     // Calculate percentages
