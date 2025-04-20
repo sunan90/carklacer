@@ -18,7 +18,7 @@ app.use(express.static('public'));
 app.use('/api/auth', authRoutes);
 
 // Protect checklist routes with authentication middleware
-app.use('/api/checklist', authenticateToken, checklistRoutes);
+app.use('/api/checklist', verifyToken, checklistRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
