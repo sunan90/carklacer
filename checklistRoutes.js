@@ -11,11 +11,7 @@ router.put('/:id', checklistController.updateChecklist);
 router.delete('/:id', checklistController.deleteChecklist);
 
 // Route untuk admin lihat semua checklist
-router.get('/admin/rekap', verifyToken, verifyAdmin, checklistController.getAllChecklists);
-router.get('/admin/checklists', authMiddleware.verifyToken, checklistController.getAllChecklistsAdmin);
-router.get('/admin/rekap', authMiddleware.verifyToken, checklistController.getRekapData);
-
-
-
+router.get('/admin/rekap', verifyToken, verifyAdmin, checklistController.getRekapData);
+router.get('/admin/checklists', verifyToken, verifyAdmin, checklistController.getAllChecklistsAdmin);
 
 module.exports = router;
