@@ -51,16 +51,17 @@ exports.getRekapData = (req, res) => {
   // Aggregate checklist completion percentages per user per week
   const sql = `
     SELECT nama,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 1 AND status = 'done' THEN 1 ELSE 0 END) AS minggu1_done,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 1 THEN 1 ELSE 0 END) AS minggu1_total,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 2 AND status = 'done' THEN 1 ELSE 0 END) AS minggu2_done,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 2 THEN 1 ELSE 0 END) AS minggu2_total,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 3 AND status = 'done' THEN 1 ELSE 0 END) AS minggu3_done,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 3 THEN 1 ELSE 0 END) AS minggu3_total,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 4 AND status = 'done' THEN 1 ELSE 0 END) AS minggu4_done,
-      SUM(CASE WHEN WEEK(STR_TO_DATE(tanggal, '%Y-%m-%d')) = 4 THEN 1 ELSE 0 END) AS minggu4_total
+      SUM(CASE WHEN WEEK(tanggal) = 1 AND status = 'done' THEN 1 ELSE 0 END) AS minggu1_done,
+      SUM(CASE WHEN WEEK(tanggal) = 1 THEN 1 ELSE 0 END) AS minggu1_total,
+      SUM(CASE WHEN WEEK(tanggal) = 2 AND status = 'done' THEN 1 ELSE 0 END) AS minggu2_done,
+      SUM(CASE WHEN WEEK(tanggal) = 2 THEN 1 ELSE 0 END) AS minggu2_total,
+      SUM(CASE WHEN WEEK(tanggal) = 3 AND status = 'done' THEN 1 ELSE 0 END) AS minggu3_done,
+      SUM(CASE WHEN WEEK(tanggal) = 3 THEN 1 ELSE 0 END) AS minggu3_total,
+      SUM(CASE WHEN WEEK(tanggal) = 4 AND status = 'done' THEN 1 ELSE 0 END) AS minggu4_done,
+      SUM(CASE WHEN WEEK(tanggal) = 4 THEN 1 ELSE 0 END) AS minggu4_total
     FROM checklist
     GROUP BY nama
+    ORDER BY nama
   `;
 
   db.query(sql, (err, results) => {
