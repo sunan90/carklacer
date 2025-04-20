@@ -51,6 +51,7 @@ exports.deleteChecklist = (req, res) => {
 };
 
 exports.getRekapData = (req, res) => {
+  console.log('getRekapData called, user:', req.user);
   // Aggregate checklist completion percentages per user per week
   const sql = `
     SELECT nama,
@@ -68,7 +69,10 @@ exports.getRekapData = (req, res) => {
   `;
 
   db.query(sql, (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+      console.error('Error executing getRekapData query:', err);
+      return res.status(500).json({ error: err });
+    }
 
     // Calculate percentages
     const recap = results.map(row => {
@@ -87,6 +91,7 @@ exports.getRekapData = (req, res) => {
       };
     });
 
+    console.log('getRekapData result:', recap);
     res.json(recap);
   });
 };
