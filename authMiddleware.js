@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'your_secret_key'; // Use env variable in production
+const SECRET_KEY = 'your_secret_key';
 
-function authenticateToken(req, res, next) {
+// Untuk semua user yang login
+function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -14,4 +15,12 @@ function authenticateToken(req, res, next) {
   });
 }
 
-module.exports = authenticateToken;
+// Khusus admin
+function verifyAdmin(req, res, next) {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+}
+
+module.exports = { verifyToken, verifyAdmin };
