@@ -1,5 +1,4 @@
 
-const Checklist = require('./checklistModel');
 const db = require('./db');
 
 exports.getAllChecklist = (req, res) => {
@@ -8,7 +7,7 @@ exports.getAllChecklist = (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   const sql = 'SELECT * FROM checklist WHERE nama = ?';
-  Checklist.getByUsername(username, (err, result) => {
+  db.query(sql, [username], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json(result);
   });
@@ -16,7 +15,8 @@ exports.getAllChecklist = (req, res) => {
 
 exports.getAllChecklistsAdmin = (req, res) => {
   // Admin endpoint to get all checklist data
-  Checklist.getAll((err, result) => {
+  const sql = 'SELECT * FROM checklist';
+  db.query(sql, (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json(result);
   });
@@ -24,7 +24,8 @@ exports.getAllChecklistsAdmin = (req, res) => {
 
 exports.addChecklist = (req, res) => {
   const data = req.body;
-  Checklist.addChecklist(data, (err, result) => {
+  const sql = 'INSERT INTO checklist SET ?';
+  db.query(sql, data, (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: 'Checklist added!', id: result.insertId });
   });
@@ -33,7 +34,8 @@ exports.addChecklist = (req, res) => {
 exports.updateChecklist = (req, res) => {
   const id = req.params.id;
   const data = req.body;
-  Checklist.updateChecklist(id, data, (err, result) => {
+  const sql = 'UPDATE checklist SET ? WHERE id = ?';
+  db.query(sql, [data, id], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: 'Checklist updated!' });
   });
@@ -41,7 +43,8 @@ exports.updateChecklist = (req, res) => {
 
 exports.deleteChecklist = (req, res) => {
   const id = req.params.id;
-  Checklist.deleteChecklist(id, (err, result) => {
+  const sql = 'DELETE FROM checklist WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: 'Checklist deleted!' });
   });
