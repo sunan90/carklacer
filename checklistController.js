@@ -1,5 +1,7 @@
 
 const db = require('./db');
+const { verifyAdmin } = require('./authMiddleware'); // Import middleware
+
 
 exports.getAllChecklist = (req, res) => {
   const username = req.user && req.user.username;
@@ -50,51 +52,52 @@ exports.deleteChecklist = (req, res) => {
   });
 };
 
-exports.getRekapData = (req, res) => {
-  console.log('getRekapData called, user:', req.user);
-  // Aggregate checklist completion percentages per user per week
-  const sql = `
-    SELECT nama,
-      SUM(CASE WHEN WEEK(tanggal) = 1 AND status = 'done' THEN 1 ELSE 0 END) AS minggu1_done,
-      SUM(CASE WHEN WEEK(tanggal) = 1 THEN 1 ELSE 0 END) AS minggu1_total,
-      SUM(CASE WHEN WEEK(tanggal) = 2 AND status = 'done' THEN 1 ELSE 0 END) AS minggu2_done,
-      SUM(CASE WHEN WEEK(tanggal) = 2 THEN 1 ELSE 0 END) AS minggu2_total,
-      SUM(CASE WHEN WEEK(tanggal) = 3 AND status = 'done' THEN 1 ELSE 0 END) AS minggu3_done,
-      SUM(CASE WHEN WEEK(tanggal) = 3 THEN 1 ELSE 0 END) AS minggu3_total,
-      SUM(CASE WHEN WEEK(tanggal) = 4 AND status = 'done' THEN 1 ELSE 0 END) AS minggu4_done,
-      SUM(CASE WHEN WEEK(tanggal) = 4 THEN 1 ELSE 0 END) AS minggu4_total
-    FROM checklist
-    GROUP BY nama
-    ORDER BY nama
-  `;
+exports.getRekapData = [
+  verifyAdmin, // Tambahkan middleware untuk admin
+  (req, res) => {
+    console.log('getRekapData called, user:', req.user);
+    const sql = `
+      SELECT nama,
+        SUM(CASE WHEN WEEK(tanggal) = 1 AND status = 'done' THEN 1 ELSE 0 END) AS minggu1_done,
+        SUM(CASE WHEN WEEK(tanggal) = 1 THEN 1 ELSE 0 END) AS minggu1_total,
+        SUM(CASE WHEN WEEK(tanggal) = 2 AND status = 'done' THEN 1 ELSE 0 END) AS minggu2_done,
+        SUM(CASE WHEN WEEK(tanggal) = 2 THEN 1 ELSE 0 END) AS minggu2_total,
+        SUM(CASE WHEN WEEK(tanggal) = 3 AND status = 'done' THEN 1 ELSE 0 END) AS minggu3_done,
+        SUM(CASE WHEN WEEK(tanggal) = 3 THEN 1 ELSE 0 END) AS minggu3_total,
+        SUM(CASE WHEN WEEK(tanggal) = 4 AND status = 'done' THEN 1 ELSE 0 END) AS minggu4_done,
+        SUM(CASE WHEN WEEK(tanggal) = 4 THEN 1 ELSE 0 END) AS minggu4_total
+      FROM checklist
+      GROUP BY nama
+      ORDER BY nama
+    `;
 
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error executing getRekapData query:', err);
-      return res.status(500).json({ error: err });
-    }
-
-    // Calculate percentages
-    const recap = results.map(row => {
-      const minggu = [];
-      for (let i = 1; i <= 4; i++) {
-        const done = row[`minggu${i}_done`];
-        const total = row[`minggu${i}_total`];
-        const percent = total ? Math.round((done / total) * 100) : 0;
-        minggu.push(percent);
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('Error executing getRekapData query:', err);
+        return res.status(500).json({ error: err });
       }
-      const totalPercent = Math.round(minggu.reduce((a, b) => a + b, 0) / 4);
-      return {
-        nama: row.nama,
-        minggu,
-        totalPercent
-      };
-    });
 
-    console.log('getRekapData result:', recap);
-    res.json(recap);
-  });
-};
+      const recap = results.map(row => {
+        const minggu = [];
+        for (let i = 1; i <= 4; i++) {
+          const done = row[`minggu${i}_done`];
+          const total = row[`minggu${i}_total`];
+          const percent = total ? Math.round((done / total) * 100) : 0;
+          minggu.push(percent);
+        }
+        const totalPercent = Math.round(minggu.reduce((a, b) => a + b, 0) / 4);
+        return {
+          nama: row.nama,
+          minggu,
+          totalPercent
+        };
+      });
+
+      console.log('getRekapData result:', recap);
+      res.json(recap);
+    });
+  }
+];
 const Checklist = require('./checklistModel');
 
 exports.getAllChecklists = (req, res) => {
