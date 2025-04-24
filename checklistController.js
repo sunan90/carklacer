@@ -52,6 +52,8 @@ exports.deleteChecklist = (req, res) => {
   });
 };
 
+const { verifyAdmin } = require('./authMiddleware'); // Import middleware
+
 exports.getRekapData = [
   verifyAdmin, // Tambahkan middleware untuk admin
   (req, res) => {
